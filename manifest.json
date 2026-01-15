@@ -1,0 +1,42 @@
+{
+  "manifest_version": 3,
+  "name": "Auto Login Extension",
+  "version": "1.0",
+  "description": "Automatically enters and submits username and password on login pages",
+  "icons": {
+    "16": "icon.png",
+    "32": "icon.png",
+    "48": "icon.png",
+    "128": "icon.png"
+  },
+  "permissions": ["activeTab", "scripting", "storage", "tabs"],
+  "host_permissions": [
+    "https://192.168.249.1:1000/*",
+    "http://192.168.249.1:1000/*"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_title": "Auto Login",
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "icon.png",
+      "32": "icon.png",
+      "48": "icon.png",
+      "128": "icon.png"
+    }
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://192.168.249.1:1000/login*",
+        "http://192.168.249.1:1000/login*",
+        "https://192.168.249.1:1000/keepalive*",
+        "http://192.168.249.1:1000/keepalive*"
+      ],
+      "js": ["content.js"],
+      "run_at": "document_end"
+    }
+  ]
+}
