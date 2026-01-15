@@ -10,6 +10,14 @@ A Chrome extension that automatically enters and submits username and password o
 - Simple popup interface for managing credentials
 - Works with both HTTP and HTTPS versions of the target site
 
+## Demo
+
+
+https://github.com/user-attachments/assets/d226060a-e6a2-4d97-a6f0-85e5f94ff0a0
+
+
+
+
 ## Installation
 
 1. Open Chrome and navigate to `chrome://extensions/`
