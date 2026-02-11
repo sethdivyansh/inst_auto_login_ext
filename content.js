@@ -105,7 +105,7 @@
     async function fillLoginForm() {
         // Check if we're on the correct login page
         const currentUrl = window.location.href;
-        if (!currentUrl.includes('192.168.249.1:1000/login')) {
+        if (!currentUrl.includes('192.168.249.1:1000/login') && !currentUrl.includes('192.168.249.1:1000/fgtauth')) {
             return;
         }
 
@@ -175,7 +175,7 @@
     function initializeExtension() {
         const currentUrl = window.location.href;
 
-        if (currentUrl.includes('192.168.249.1:1000/login')) {
+        if (currentUrl.includes('192.168.249.1:1000/login') || currentUrl.includes('192.168.249.1:1000/fgtauth')) {
             // On login page - fill form
             setTimeout(fillLoginForm, 100);
             observeFormChanges();
