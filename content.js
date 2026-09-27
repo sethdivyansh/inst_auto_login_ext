@@ -61,20 +61,20 @@
                     popupDiv.textContent = 'Closing this tab';
                     document.body.appendChild(popupDiv);
 
-                    setTimeout(() => {
-                        popupDiv.remove();
-                        chrome.runtime.sendMessage({ action: 'closeTab' }, (response) => {
-                            if (chrome.runtime.lastError) {
-                                console.error('Auto Login: Error sending close tab message:', chrome.runtime.lastError);
-                                window.close();
-                            } else if (response && response.success) {
-                                console.log('Auto Login: Tab closed successfully');
-                            } else {
-                                console.error('Auto Login: Failed to close tab:', response?.error);
-                                window.close();
-                            }
-                        });
-                    }, 500);
+                    // setTimeout(() => {
+                    popupDiv.remove();
+                    chrome.runtime.sendMessage({ action: 'closeTab' }, (response) => {
+                        if (chrome.runtime.lastError) {
+                            console.error('Auto Login: Error sending close tab message:', chrome.runtime.lastError);
+                            window.close();
+                        } else if (response && response.success) {
+                            console.log('Auto Login: Tab closed successfully');
+                        } else {
+                            console.error('Auto Login: Failed to close tab:', response?.error);
+                            window.close();
+                        }
+                    });
+                    // }, 50);
                 }
             } else {
                 // If no success indicators found, wait a bit and try again (max 3 attempts)
@@ -82,19 +82,17 @@
                 if (attempts < 3) {
                     checkForSuccessfulLogin.attempts = attempts + 1;
                     console.log(`Auto Login: Success indicators not found, retrying (${attempts + 1}/3)...`);
-                    setTimeout(checkForSuccessfulLogin, 2000);
+                    setTimeout(checkForSuccessfulLogin, 20);
                 } else {
                     console.log('Auto Login: Max attempts reached, assuming login was successful');
                     // Auto-close anyway if we're on keepalive page after max attempts
                     const credentials = await getStoredCredentials();
                     if (credentials.autoCloseTab) {
-                        setTimeout(() => {
-                            chrome.runtime.sendMessage({ action: 'closeTab' }, (response) => {
-                                if (chrome.runtime.lastError || !response?.success) {
-                                    window.close();
-                                }
-                            });
-                        }, 1000);
+                        chrome.runtime.sendMessage({ action: 'closeTab' }, (response) => {
+                            if (chrome.runtime.lastError || !response?.success) {
+                                window.close();
+                            }
+                        });
                     }
                 }
             }
@@ -138,9 +136,7 @@
             // Auto-submit if enabled
             if (credentials.autoSubmit && submitButton) {
                 console.log('Auto Login: Auto-submitting form');
-                setTimeout(() => {
-                    submitButton.click();
-                }, 500); // Small delay to ensure form is properly filled
+                submitButton.click();
             }
         } else {
             console.log('Auto Login: Login form elements not found');
@@ -177,11 +173,11 @@
 
         if (currentUrl.includes('192.168.249.1:1000/login') || currentUrl.includes('192.168.249.1:1000/fgtauth')) {
             // On login page - fill form
-            setTimeout(fillLoginForm, 100);
+            fillLoginForm();
             observeFormChanges();
         } else if (currentUrl.includes('192.168.249.1:1000/keepalive')) {
             // On keepalive page - check for successful login
-            setTimeout(checkForSuccessfulLogin, 500);
+            checkForSuccessfulLogin();
         }
     }
 
@@ -195,7 +191,7 @@
     // Also initialize when page becomes visible (in case of navigation)
     document.addEventListener('visibilitychange', () => {
         if (!document.hidden) {
-            setTimeout(initializeExtension, 100);
+            initializeExtension();
         }
     });
 
